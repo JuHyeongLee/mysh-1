@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
@@ -50,8 +51,17 @@ int evaluate_command(int n_commands, struct single_command (*commands)[512])
     } else if (strcmp(com->argv[0], "exit") == 0) {
       return 1;
     } else {
-      fprintf(stderr, "%s: command not found\n", com->argv[0]);
-      return -1;
+	int pid;
+	pid = fork();
+	
+	if(pid>0){
+	wait();
+	}else if(pid==0)
+	{
+	if(execv(com->argv[0],com->argv)==-1)
+	exit(0);
+	}
+	
     }
   }
 
@@ -71,6 +81,5 @@ void free_commands(int n_commands, struct single_command (*commands)[512])
 
     free(argv);
   }
-
-  memset((*commands), 0, sizeof(struct single_command) * n_commands);
 }
+ 
