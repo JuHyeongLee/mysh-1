@@ -58,10 +58,20 @@ int evaluate_command(int n_commands, struct single_command (*commands)[512])
 	wait();
 	}else if(pid==0)
 	{
-	if(execv(com->argv[0],com->argv)==-1)
-	exit(0);
+	if(execv(com->argv[0],com->argv)==-1){
+
+	char str[] = "/bin/";
+	com->argv[0] = strcat(str,com->argv[0]);
+		if(execv(com->argv[0],com->argv)==-1){
+			char str2[] ="/usr/";
+				com->argv[0] =strcat(str2,com->argv[0]);
+				execv(com->argv[0],com->argv);
+					
+			}
+	exit(0);  
+          }
 	}
-	
+ 	
     }
   }
 
